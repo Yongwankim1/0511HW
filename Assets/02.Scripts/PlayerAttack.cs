@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -6,13 +7,17 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] Animator m_animator;
     [SerializeField] int AttackCount = 0;
 
-    [SerializeField] float defaultDamage = 0;
+    [SerializeField] int defaultDamage = 20;
     [SerializeField] float currentDamage = 0;
     [SerializeField] float equipDamage = 0;
     public float Dmaage => currentDamage;
 
     int attackHash = -999;
 
+    [SerializeField] LayerMask m_interactMask;
+    [SerializeField] float radius = 0.5f;
+    [SerializeField] float maxDistance = 1f;
+    private Collider[] results = new Collider[5];
     private void Awake()
     {
         Initialize();
@@ -54,6 +59,7 @@ public class PlayerAttack : MonoBehaviour
         if (!inputReader.IsAttackPerformedThisFrame) return;
         m_animator.SetTrigger(attackHash);
         //m_animator.SetInteger("AttackCount",AttackCount);
+        SphereOverlapAttack();
     }
     public void LastAttack()
     {
@@ -69,4 +75,25 @@ public class PlayerAttack : MonoBehaviour
         currentDamage = (defaultDamage + equipDamage);
     }
 
+    void SphereOverlapAttack()
+    {
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        int count = Physics.OverlapSphereNonAlloc(origin + direction * maxDistance, radius,results,m_interactMask);
+
+        for (int i = 0; i < count; i++)
+        {
+            IDamageable damageable = results[i].GetComponent<IDamageable>();
+            if (damageable == null) return;
+            damageable.TakeDamage(defaultDamage);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        Gizmos.DrawWireSphere(transform.position + transform.forward * maxDistance, radius);
+    }
 }

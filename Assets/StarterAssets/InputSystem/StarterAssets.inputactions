@@ -70,15 +70,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "0ebfb7b8-9613-4df2-b9ec-49e9709ea99f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "3ba2a687-eab5-4b33-862c-b1505a4be6d0",
@@ -268,7 +259,7 @@
                 {
                     "name": "",
                     "id": "8c323aa6-4daa-438c-932d-62f3b5aca700",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyboardMouse",
@@ -300,19 +291,8 @@
                 },
                 {
                     "name": "",
-                    "id": "d8cb1f02-1758-4cd4-8dfb-5d00831eb68c",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "03ff1a06-3649-4b96-a611-1442824bfea5",
-                    "path": "",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
