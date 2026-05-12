@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -6,13 +7,14 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] Animator m_animator;
     [SerializeField] int AttackCount = 0;
 
-    [SerializeField] float defaultDamage = 0;
+    [SerializeField] int defaultDamage = 20;
     [SerializeField] float currentDamage = 0;
     [SerializeField] float equipDamage = 0;
     public float Dmaage => currentDamage;
 
     int attackHash = -999;
 
+    [SerializeField] LayerMask m_interactMask;
     private void Awake()
     {
         Initialize();
@@ -54,6 +56,7 @@ public class PlayerAttack : MonoBehaviour
         if (!inputReader.IsAttackPerformedThisFrame) return;
         m_animator.SetTrigger(attackHash);
         //m_animator.SetInteger("AttackCount",AttackCount);
+        SphereCastAttack();
     }
     public void LastAttack()
     {
@@ -68,5 +71,32 @@ public class PlayerAttack : MonoBehaviour
         //weapon.EndAttack();
         currentDamage = (defaultDamage + equipDamage);
     }
+    void SphereCastAttack()
+    {
+        float radius = 0.5f;
+        float maxDistance = 1f;
 
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+
+        if (Physics.SphereCast(origin, radius, direction, out RaycastHit hit, maxDistance, m_interactMask))
+        {
+            //Debug.Log($"Sphere Hit {hit.collider.name}");
+            IDamageable Damageable = hit.collider.GetComponent<IDamageable>();
+            if (Damageable == null) return;
+            Damageable.TakeDamage(defaultDamage);
+        }
+        else
+        {
+            Debug.Log("No hit");
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        Gizmos.DrawWireSphere(transform.position + transform.forward * 1f, 0.5f);
+    }
 }
