@@ -15,6 +15,9 @@ public class PlayerAttack : MonoBehaviour
     int attackHash = -999;
 
     [SerializeField] LayerMask m_interactMask;
+    [SerializeField] float radius = 0.5f;
+    [SerializeField] float maxDistance = 1f;
+    private Collider[] results = new Collider[5];
     private void Awake()
     {
         Initialize();
@@ -71,25 +74,19 @@ public class PlayerAttack : MonoBehaviour
         //weapon.EndAttack();
         currentDamage = (defaultDamage + equipDamage);
     }
+
     void SphereCastAttack()
     {
-        float radius = 0.5f;
-        float maxDistance = 1f;
-
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
 
+        int count = Physics.OverlapSphereNonAlloc(origin + direction * maxDistance, radius,results,m_interactMask);
 
-        if (Physics.SphereCast(origin, radius, direction, out RaycastHit hit, maxDistance, m_interactMask))
+        for (int i = 0; i < count; i++)
         {
-            //Debug.Log($"Sphere Hit {hit.collider.name}");
-            IDamageable Damageable = hit.collider.GetComponent<IDamageable>();
-            if (Damageable == null) return;
-            Damageable.TakeDamage(defaultDamage);
-        }
-        else
-        {
-            Debug.Log("No hit");
+            IDamageable damageable = results[i].GetComponent<IDamageable>();
+            if (damageable == null) return;
+            damageable.TakeDamage(defaultDamage);
         }
     }
 
@@ -97,6 +94,6 @@ public class PlayerAttack : MonoBehaviour
     {
         Gizmos.color = Color.green;
 
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1f, 0.5f);
+        Gizmos.DrawWireSphere(transform.position + transform.forward * maxDistance, radius);
     }
 }
