@@ -59,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
         if (!inputReader.IsAttackPerformedThisFrame) return;
         m_animator.SetTrigger(attackHash);
         //m_animator.SetInteger("AttackCount",AttackCount);
-        SphereCastAttack();
+        SphereOverlapAttack();
     }
     public void LastAttack()
     {
@@ -75,7 +75,7 @@ public class PlayerAttack : MonoBehaviour
         currentDamage = (defaultDamage + equipDamage);
     }
 
-    void SphereCastAttack()
+    void SphereOverlapAttack()
     {
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
